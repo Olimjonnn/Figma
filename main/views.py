@@ -1,4 +1,3 @@
-from socket import errorTab
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
@@ -54,9 +53,11 @@ class ZadachaView(viewsets.ModelViewSet):
 class RegistrationView(viewsets.ModelViewSet):
     queryset = Registration.objects.all()
     serializer_class = RegistrationSerializer
-    
+
+    http_method_names = ['post']
 
     def create(self, request):
+        user = request.user
         try:
             name = request.data["name"]
             surname = request.data["surname"]
@@ -64,19 +65,18 @@ class RegistrationView(viewsets.ModelViewSet):
             email = request.data["email"]
             address = request.data["address"]
             phone = request.data["phone"]
-            answer = request.data['answer']
-            ans = Answer.objects.filter(answer=answer, tick=True)
-            a = Registration.objects.create(ans=ans, name=name, surname=surname, born=born, email=email, address=address, phone=phone)
+            a = Registration.objects.create(name=name, surname=surname, born=born, email=email, address=address, phone=phone)
+            answer1 = Answer.objects.get(pk=1)
+            ans = Registration(answer=answer1)
+            ans.answer.save(a)
             b = RegistrationSerializer(a, many=False)
-
             return Response(b.data)
-        
+
         except Exception as arr:
             dat = {
                 "error": f"{arr}"
             }
             return Response(dat)
-
 
 class ResultView(viewsets.ModelViewSet):
     queryset = Result.objects.all()
@@ -120,17 +120,18 @@ class AnswerView(viewsets.ModelViewSet):
     http_method_names = ['post']
 
 
-
-
 class PismoView(viewsets.ModelViewSet):
     queryset = Pismo.objects.all()
     serializer_class = PismoSerializer
     http_method_names = ['post']
-
 
     def list(self, request):
         pismo = Pismo.objects.all()
         ps = PismoSerializer(pismo, many=True)
         return Response(ps.data)
     
- 
+class LogoView(viewsets.ModelViewSet):
+    queryset = Logo.objects.all()
+    serializer_class = LogoSerializer
+
+    http_method_names = ["get"]

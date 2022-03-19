@@ -28,6 +28,7 @@ class ZadachaSerializer(serializers.ModelSerializer):
 
 class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
+        depth = 1
         model = Registration
         fields = "__all__"
 
@@ -53,6 +54,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
+        depth = 1
         model = Answer
         fields = "__all__"
 
@@ -60,4 +62,10 @@ class PismoSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 1
         model = Pismo
+        fields = "__all__"
+
+class LogoSerializer(serializers.ModelSerializer):
+    class Meta:
+        depth = 1
+        model = Logo
         fields = "__all__"
